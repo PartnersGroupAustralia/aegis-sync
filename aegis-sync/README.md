@@ -95,13 +95,21 @@ node scout-target.js "https://target-portal.com/login"
 ## Running OpenHands
 
 You can spin up an OpenHands agent in a Docker container to work within this directory:
+Requirements:
+- Docker daemon must be running (for macOS, start Docker Desktop first).
+- A reachable Docker socket must exist via `DOCKER_HOST` (unix socket) or `/var/run/docker.sock`.
+- Run the command from the project directory you want mounted into `/workspace`.
 ```bash
+DOCKER_SOCK=${DOCKER_HOST#unix://}
+if [ -z "$DOCKER_SOCK" ] || [ ! -S "$DOCKER_SOCK" ]; then DOCKER_SOCK=/var/run/docker.sock; fi
+if [ ! -S "$DOCKER_SOCK" ]; then echo "Start Docker Desktop first."; exit 1; fi
+WORKSPACE_DIR="$(pwd)"
 docker run -it \
     --pull=always \
     -e SANDBOX_USER_ID=$(id -u) \
-    -e WORKSPACE_BASE=$HOME/aegis-sync \
-    -v $HOME/aegis-sync:/workspace \
-    -v /var/run/docker.sock:/var/run/docker.sock \
+    -e WORKSPACE_BASE="$WORKSPACE_DIR" \
+    -v "$WORKSPACE_DIR:/workspace" \
+    -v "$DOCKER_SOCK:/var/run/docker.sock" \
     -p 3000:3000 \
     --name openhands \
     ghcr.io/all-hands-ai/openhands:0.9

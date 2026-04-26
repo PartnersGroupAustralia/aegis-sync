@@ -19,15 +19,23 @@ hub:
 
 openhands:
 	echo "Starting OpenHands AI Agent on port 3000..."
-	docker run -d --rm \
-		--pull=always \
-		-e SANDBOX_USER_ID=$(id -u) \
-		-e WORKSPACE_BASE=$HOME/aegis-sync \
-		-v $HOME/aegis-sync:/workspace \
-		-v /var/run/docker.sock:/var/run/docker.sock \
-		-p 3000:3000 \
-		--name openhands \
-		ghcr.io/all-hands-ai/openhands:0.9
+	sh -c 'DOCKER_SOCK="${DOCKER_HOST#unix://}"; \
+		if [ -z "$$DOCKER_SOCK" ] || [ ! -S "$$DOCKER_SOCK" ]; then DOCKER_SOCK=/var/run/docker.sock; fi; \
+		if [ ! -S "$$DOCKER_SOCK" ]; then \
+			echo "Docker socket not found. Start Docker Desktop (or your Docker daemon) and retry."; \
+			exit 1; \
+		fi; \
+		WORKSPACE_DIR="$$(pwd)"; \
+		docker rm -f openhands >/dev/null 2>&1 || true; \
+		docker run -d --rm \
+			--pull=always \
+			-e SANDBOX_USER_ID="$$(id -u)" \
+			-e WORKSPACE_BASE="$$WORKSPACE_DIR" \
+			-v "$$WORKSPACE_DIR:/workspace" \
+			-v "$$DOCKER_SOCK:/var/run/docker.sock" \
+			-p 3000:3000 \
+			--name openhands \
+			ghcr.io/all-hands-ai/openhands:0.9'
 
 docker-hub:
 	echo "Starting Aegis Hub via Docker Compose..."
