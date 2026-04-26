@@ -19,7 +19,7 @@ hub:
 
 openhands:
 	echo "Starting OpenHands AI Agent on port 3000..."
-	docker run -it --rm \
+	docker run -d --rm \
 		--pull=always \
 		-e SANDBOX_USER_ID=$(id -u) \
 		-e WORKSPACE_BASE=$HOME/aegis-sync \
