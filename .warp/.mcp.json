@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "openhands": {
+      "url": "http://127.0.0.1:3000/api/mcp",
+      "env": {
+        "OPENHANDS_API_KEY": "optional_key",
+        "WORKSPACE_BASE": "/Users/jake/aegis-sync"
+      }
+    },
+    "aegis-hub": {
+      "url": "http://127.0.0.1:1337"
+    }
+  }
+}

@@ -2,7 +2,9 @@ import { firefox } from 'playwright-extra';
 import stealth from 'puppeteer-extra-plugin-stealth';
 import fs from 'fs';
 
-firefox.use(stealth());
+const stealthPlugin = stealth();
+stealthPlugin.enabledEvasions.delete('user-agent-override');
+firefox.use(stealthPlugin);
 
 class AegisValidator {
   constructor() {
