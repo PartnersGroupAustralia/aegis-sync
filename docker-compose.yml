@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  aegis_sync_hub:
+    build: .
+    container_name: aegis_sync_core
+    ports:
+      - "1337:1337"
+    environment:
+      - PORT=1337
+      - DB_PATH=./audit/sync_master.db
+      - SYNC_TOKEN=${SYNC_TOKEN}
+    volumes:
+      - ./audit:/app/audit
+      - ./vault:/app/vault
+    restart: unless-stopped

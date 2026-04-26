@@ -1,0 +1,18 @@
+{
+  "name": "aegis-sync",
+  "version": "1.0.0",
+  "description": "Enterprise Identity Hub",
+  "main": "hub-main.js",
+  "type": "module",
+  "scripts": {
+    "start": "node hub-main.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^9.4.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "playwright-extra": "^4.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "ws": "^8.16.0"
+  }
+}
