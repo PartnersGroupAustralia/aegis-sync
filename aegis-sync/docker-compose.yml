@@ -1,0 +1,13 @@
+version: '3.9'
+services:
+  sync-hub:
+    build: .
+    container_name: aegis_sync_hub
+    volumes:
+      - .:/app
+      - ./vault:/app/vault
+      - ./audit:/app/audit
+    ports:
+      - "${PORT}:${PORT}"
+    env_file: .env
+    restart: always
