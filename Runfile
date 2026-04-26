@@ -1,0 +1,49 @@
+# AegisSync Production Runfile
+
+help:
+	echo "AegisSync Production Tasks:"
+	echo "  run hub           - Start the Aegis Hub server locally (Node.js)"
+	echo "  run openhands     - Run the OpenHands AI agent in Docker"
+	echo "  run docker-hub    - Start the Aegis Hub via Docker Compose"
+	echo "  run audit-test    - Send a test audit request to verify the server"
+	echo "  run scout         - Run the Firecrawl scout target mapping script"
+	echo "  run install       - Install NPM dependencies and Playwright engines"
+	echo "  run clean         - Clean up stopped Docker containers and logs"
+
+install:
+	cd aegis-sync && npm install
+	cd aegis-sync && npx playwright install firefox
+
+hub:
+	cd aegis-sync && npm start
+
+openhands:
+	echo "Starting OpenHands AI Agent on port 3000..."
+	docker run -it --rm \
+		--pull=always \
+		-e SANDBOX_USER_ID=$(id -u) \
+		-e WORKSPACE_BASE=$HOME/aegis-sync \
+		-v $HOME/aegis-sync:/workspace \
+		-v /var/run/docker.sock:/var/run/docker.sock \
+		-p 3000:3000 \
+		--name openhands \
+		ghcr.io/all-hands-ai/openhands:0.9
+
+docker-hub:
+	echo "Starting Aegis Hub via Docker Compose..."
+	cd aegis-sync && docker-compose up -d --build
+
+audit-test:
+	echo "Sending test audit request to localhost:1337..."
+	curl -s -X POST http://localhost:1337/api/perform-audit \
+		-H "Content-Type: application/json" \
+		-d '{"identities": [], "endpoint": "health-check"}'
+
+scout:
+	cd aegis-sync && node scout-target.js "https://example.com/login"
+
+clean:
+	echo "Cleaning up OpenHands container if it exists..."
+	docker rm -f openhands 2>/dev/null || true
+	echo "Stopping Docker Compose services..."
+	cd aegis-sync && docker-compose down 2>/dev/null || true
