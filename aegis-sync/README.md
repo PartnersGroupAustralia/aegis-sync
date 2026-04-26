@@ -92,11 +92,8 @@ node scout-target.js "https://target-portal.com/login"
 *   **WebSocket Comms**: Node-to-Hub communications over WebSocket are secured using AES-256-GCM encryption seeded by `SYNC_TOKEN`. Keep this token strictly confidential.
 *   **Vault Data**: Files inside the `vault/` directory contain active session cookies. These should be treated as highly sensitive data.
 
-## Integration with Warp & OpenHands
+## Running OpenHands
 
-This project is configured to integrate with **Warp's AI Agent (Oz)** and **OpenHands** through the Model Context Protocol (MCP).
-
-### Running OpenHands
 You can spin up an OpenHands agent in a Docker container to work within this directory:
 ```bash
 docker run -it \
@@ -110,23 +107,3 @@ docker run -it \
     ghcr.io/all-hands-ai/openhands:0.9
 ```
 
-### Warp MCP Configuration
-The repository includes a project-scoped Warp configuration file at `.warp/.mcp.json`. This allows Warp to automatically connect to both the OpenHands container and the Aegis Hub API:
-
-```json
-{
-  "mcpServers": {
-    "openhands": {
-      "url": "http://127.0.0.1:3000/api/mcp",
-      "env": {
-        "OPENHANDS_API_KEY": "optional_key",
-        "WORKSPACE_BASE": "/Users/jake/aegis-sync"
-      }
-    },
-    "aegis-hub": {
-      "url": "http://127.0.0.1:1337"
-    }
-  }
-}
-```
-With this setup, the Warp agent can inspect the OpenHands sandbox and communicate directly with the local Aegis Hub via their respective MCP endpoints.
