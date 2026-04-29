@@ -1,9 +1,9 @@
 {
-  "name": "aegis-sync",
-  "version": "1.0.0",
+  "name": "lumenpath-sync",
+  "version": "2.1.0",
   "type": "module",
-  "description": "Enterprise Identity Synchronization Hub",
-  "main": "hub-main.js",
+  "description": "Enterprise-grade legacy data bridge for high-latency endpoints.",
+  "main": "controller.js",
   "dependencies": {
     "better-sqlite3": "^11.0.0",
     "dotenv": "^16.4.5",
